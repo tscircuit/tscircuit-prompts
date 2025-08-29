@@ -19,7 +19,9 @@ export interface CircuitJsonAnalysis {
   hasErrorsOrWarnings: boolean
 }
 
-export function getCircuitJsonErrorsAndWarnings(circuitJson: any): CircuitJsonAnalysis {
+export function getCircuitJsonErrorsAndWarnings(
+  circuitJson: any,
+): CircuitJsonAnalysis {
   const warnings: CircuitJsonWarning[] = []
   const errors: CircuitJsonError[] = []
 
@@ -44,8 +46,7 @@ export function getCircuitJsonErrorsAndWarnings(circuitJson: any): CircuitJsonAn
         errors.push({
           path,
           type: element.error_type,
-          message:
-            element.error_message || element.message || "Unknown error",
+          message: element.error_message || element.message || "Unknown error",
           element_type: element.type || "unknown",
         })
       }
@@ -62,16 +63,16 @@ export function getCircuitJsonErrorsAndWarnings(circuitJson: any): CircuitJsonAn
   analyzeElement(circuitJson)
 
   const hasErrorsOrWarnings = errors.length > 0 || warnings.length > 0
-  
+
   const issuesAsString = [
-    ...errors.map(e => `Error at ${e.path}: ${e.message}`),
-    ...warnings.map(w => `Warning at ${w.path}: ${w.message}`)
-  ].join('\n')
+    ...errors.map((e) => `${e.type}: ${e.message}`),
+    ...warnings.map((w) => `${w.type}: ${w.message}`),
+  ].join("\n")
 
   return {
     errors,
     warnings,
     issuesAsString,
-    hasErrorsOrWarnings
+    hasErrorsOrWarnings,
   }
 }

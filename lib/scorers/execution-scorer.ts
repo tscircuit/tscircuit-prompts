@@ -72,7 +72,14 @@ export const ExecutionScorer = createScorer<string, string>({
         getCircuitJsonErrorsAndWarnings(circuitJson)
 
       reportTrace({
-        // TODO
+        start,
+        end,
+        input: [{ role: "user", content: input }],
+        output: issuesAsString || "Circuit executed successfully with no issues",
+        usage: {
+          promptTokens: 0,
+          completionTokens: 0,
+        },
       })
 
       // Calculate score based on execution success and issues found
