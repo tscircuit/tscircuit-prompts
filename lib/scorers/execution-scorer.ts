@@ -14,11 +14,22 @@ export const ExecutionScorer = createScorer<string, string>({
       const runner = new CircuitRunner()
 
       // Execute the tscircuit code
-      const result: any = await runner.executeWithFsMap({
-        fsMap: {
-          "index.tsx": output,
-        },
-      })
+      let error: any
+      await runner
+        .executeWithFsMap({
+          fsMap: {
+            "index.tsx": output,
+          },
+        })
+        .catch((err) => {
+          error = err
+          console.error(err)
+        })
+
+      const result = {
+        circuitJson: runner.getCircuitJson(),
+        error,
+      }
 
       const end = performance.now()
 
@@ -53,24 +64,7 @@ export const ExecutionScorer = createScorer<string, string>({
       }
 
       // Get the circuit JSON
-      const circuitJson = result?.circuitJson || result?.circuit
-
-      if (!circuitJson) {
-        return {
-          score: 0.1,
-          metadata: {
-            execution_successful: true,
-            error: "No circuit JSON generated",
-            error_type: "no_output",
-            circuit_json: null,
-            warnings: [],
-            errors: [
-              { type: "no_output", message: "No circuit JSON generated" },
-            ],
-            execution_time: end - start,
-          },
-        }
-      }
+      const circuitJson = result.circuitJson
 
       // Analyze circuit JSON for warnings and errors
       const warnings: any[] = []
@@ -102,13 +96,6 @@ export const ExecutionScorer = createScorer<string, string>({
               element_type: element.type || "unknown",
             })
           }
-
-          // Recursively check nested objects
-          Object.entries(element).forEach(([key, value]) => {
-            if (typeof value === "object" && value !== null) {
-              analyzeElement(value, `${path}.${key}`)
-            }
-          })
         }
       }
 
@@ -147,7 +134,9 @@ export const ExecutionScorer = createScorer<string, string>({
         start,
         end,
         input: [{ role: "user", content: input }],
-        output: `Runtime Error: ${error instanceof Error ? error.message : String(error)}`,
+        output: [...errors, ...warnings]
+          .map((e) => `${e.type}: ${e.message}`)
+          .join("\n"),
         usage: {
           promptTokens: 0,
           completionTokens: 0,
