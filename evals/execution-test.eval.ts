@@ -1,5 +1,5 @@
 import { evalite } from "evalite"
-import { ExecutionScorer } from "./lib/scorers/execution-scorer"
+import { ExecutionScorer } from "../lib/scorers/execution-scorer"
 
 evalite("TSCircuit Execution Test", {
   data: async () => [

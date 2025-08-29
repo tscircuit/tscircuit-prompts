@@ -1,5 +1,5 @@
 import { evalite } from "evalite"
-import { AICircuitValidator } from "./lib/scorers/ai-circuit-validator"
+import { AICircuitValidator } from "../lib/scorers/ai-circuit-validator"
 
 evalite("TSCircuit AI Validation Test", {
   data: async () => [

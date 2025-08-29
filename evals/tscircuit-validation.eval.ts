@@ -1,6 +1,6 @@
 import { evalite } from "evalite"
-import { AICircuitValidator } from "./lib/scorers/ai-circuit-validator"
-import { ExecutionScorer } from "./lib/scorers/execution-scorer"
+import { AICircuitValidator } from "../lib/scorers/ai-circuit-validator"
+import { ExecutionScorer } from "../lib/scorers/execution-scorer"
 
 evalite("TSCircuit Validation", {
   data: async () => [

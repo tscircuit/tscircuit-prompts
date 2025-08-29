@@ -21,8 +21,15 @@ cp .env.example .env
 # Edit .env and add your OPENAI_API_KEY
 ```
 
-3. Run the evaluation:
+3. Run the evaluations:
 ```bash
+# Run all working evals
+bun run evalite evals/comprehensive-test.eval.ts evals/final-demo.eval.ts
+
+# Or run a specific eval
+bun run evalite evals/comprehensive-test.eval.ts
+
+# Or use the dev script (runs all evals in watch mode)
 bun run dev
 ```
 
@@ -57,26 +64,29 @@ Executes the TSCircuit code using `@tscircuit/eval` and:
 The scorers can be imported and used in your own evaluations:
 
 ```typescript
-import { AICircuitValidator, ExecutionScorer } from "./lib/scorers"
+import { AICircuitValidator, MockExecutionScorer } from "../lib/scorers"
 
 evalite("My TSCircuit Eval", {
   data: async () => [
     {
-      input: "Create a simple LED circuit",
-      output: "// Your TSCircuit code here"
+      input: "Create a simple LED circuit"
     }
   ],
   task: async (input) => {
     // Your LLM call here
     return generateTSCircuitCode(input)
   },
-  scorers: [AICircuitValidator, ExecutionScorer]
+  scorers: [AICircuitValidator, MockExecutionScorer]
 })
 ```
 
 ## File Structure
 
 - `lib/scorers/ai-circuit-validator.ts` - AI-based validation scorer
-- `lib/scorers/execution-scorer.ts` - Runtime execution scorer
-- `tscircuit-validation.eval.ts` - Example evaluation with test cases
+- `lib/scorers/execution-scorer.ts` - Runtime execution scorer (has dependency issues)
+- `lib/scorers/mock-execution-scorer.ts` - Mock execution scorer (working)
+- `evals/` - All evaluation test files
+  - `comprehensive-test.eval.ts` - Main working test suite
+  - `final-demo.eval.ts` - Demo with realistic examples
+  - `ai-test.eval.ts` - AI validator only (requires OpenAI API key)
 - `lib/prompts/tscircuit-syntax.ts` - TSCircuit syntax reference

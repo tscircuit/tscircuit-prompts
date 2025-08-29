@@ -1,7 +1,7 @@
 import { evalite } from "evalite"
-import { MockExecutionScorer } from "./lib/scorers/mock-execution-scorer"
+import { MockExecutionScorer } from "../lib/scorers/mock-execution-scorer"
 // Uncomment the line below if you have an OpenAI API key configured
-// import { AICircuitValidator } from "./lib/scorers/ai-circuit-validator"
+// import { AICircuitValidator } from "../lib/scorers/ai-circuit-validator"
 
 evalite("TSCircuit Final Demo", {
   data: async () => [

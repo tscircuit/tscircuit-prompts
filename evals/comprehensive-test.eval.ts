@@ -1,5 +1,5 @@
 import { evalite } from "evalite"
-import { MockExecutionScorer } from "./lib/scorers/mock-execution-scorer"
+import { MockExecutionScorer } from "../lib/scorers/mock-execution-scorer"
 
 evalite("TSCircuit Comprehensive Test", {
   data: async () => [
