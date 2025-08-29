@@ -1,5 +1,5 @@
 import OpenAI from "openai"
-import { tscircuitSyntaxPrompt } from "./prompts/tscircuit-syntax"
+import { tscircuitSyntaxPrompt } from "../prompts/tscircuit-syntax"
 import { reportTrace } from "evalite/traces"
 
 // Set evalite global testTimeout
@@ -28,7 +28,7 @@ export async function runPromptToGenerateTscircuit(
   prompt: string,
   opts: RunPromptOptions = {},
 ): Promise<RunPromptToGenerateTscircuitResult> {
-  const { model = "gpt-4o-mini" } = opts
+  const { model = "gpt-5-nano" } = opts
   const start = performance.now()
 
   const openai = new OpenAI({

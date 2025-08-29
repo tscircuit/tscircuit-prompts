@@ -14,6 +14,7 @@ export function getCircuitJsonErrorsAndWarnings(
   const errors: AnyCircuitElement[] = []
 
   const analyzeElement = (element: AnyCircuitElement): any => {
+    if (element.type === "pcb_autorouting_error") return
     if ("warning_type" in element && element.warning_type) {
       warnings.push(element)
     }

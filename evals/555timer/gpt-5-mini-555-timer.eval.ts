@@ -3,7 +3,7 @@ import { ExecutionScorer } from "../../lib/scorers/execution-scorer"
 import {
   runPromptToGenerateTscircuit,
   type RunPromptToGenerateTscircuitResult,
-} from "../../lib/run-prompt-to-generate-tscircuit"
+} from "../../lib/gen/run-prompt-to-generate-tscircuit"
 import { inputs } from "./inputs-555timer"
 
 evalite<string, RunPromptToGenerateTscircuitResult>("gpt-5-mini 555 timer", {

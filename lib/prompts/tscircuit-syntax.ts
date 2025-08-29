@@ -98,7 +98,6 @@ are optional.
 - \`<trace />\` - \`from\`, \`to\`
 - \`<transistor />\` - \`type\` (npn/pnp/nmos/pmos)
 - \`<mosfet />\` - \`channelType\` (n/p), \`mosfetMode\` (enhancement/depletion)
-- \`<connector />\` - similar to \`<chip />\`
 - \`<hole />\` - \`diameter\`
 - \`<testpoint />\` - \`padShape\` (circle/rect), \`padDiameter\`, \`footprintVariant\` (smd/through_hole), \`width\`, \`height\`
 - \`<via />\` - \`holeDiameter\`, \`outerDiameter\`

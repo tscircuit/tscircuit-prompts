@@ -1,7 +1,7 @@
 import { createScorer } from "evalite"
 import { reportTrace } from "evalite/traces"
 import { getCircuitJsonErrorsAndWarnings } from "./getCircuitJsonErrorsAndWarnings"
-import type { RunPromptToGenerateTscircuitResult } from "../run-prompt-to-generate-tscircuit"
+import type { RunPromptToGenerateTscircuitResult } from "../gen/run-prompt-to-generate-tscircuit"
 
 // Flag to switch between old and new compilation methods
 const USE_LOCAL_EVAL = process.env.USE_LOCAL_EVAL === "true"
@@ -95,9 +95,12 @@ export const ExecutionScorer = createScorer<
       reportTrace({
         start,
         end,
-        input: [{ role: "user", content: input }],
+        input: {
+          prompt: input,
+          code: output.code,
+        },
         output: result?.error
-          ? `Error: ${result.error.message}`
+          ? `${result.error.message}`
           : "Circuit executed successfully",
         usage: {
           promptTokens: 0,
