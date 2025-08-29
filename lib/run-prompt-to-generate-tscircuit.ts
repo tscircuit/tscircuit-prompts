@@ -3,6 +3,19 @@ import { streamText } from "ai"
 import { tscircuitSyntaxPrompt } from "./prompts/tscircuit-syntax"
 import { reportTrace } from "evalite/traces"
 
+// Set evalite global testTimeout
+;(global as any).testTimeout = 180_000
+
+function parseCodefence(text: string): string {
+  const codeblockRegex =
+    /```(?:typescript|ts|tsx|javascript|js|jsx)?\n([\s\S]*?)```/g
+  const match = codeblockRegex.exec(text)
+  if (match && match[1]) {
+    return match[1].trim()
+  }
+  return text.trim()
+}
+
 interface RunPromptOptions {
   model?: string
 }
@@ -24,11 +37,13 @@ ${tscircuitSyntaxPrompt}
 
 Always return the code wrapped in a proper export default function like this:
 
+\`\`\`tsx
 export default () => (
   <board width="20mm" height="20mm">
     // Your circuit components here
   </board>
 )
+\`\`\`
 
 Make sure to:
 - Use proper component names and properties
@@ -40,17 +55,8 @@ Make sure to:
       prompt: prompt,
     })
 
-    const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(
-        () => reject(new Error("AI model call timed out after 25 seconds")),
-        180_000,
-      )
-    })
-
-    const generatedCode = (await Promise.race([
-      result.text,
-      timeoutPromise,
-    ])) as string
+    const rawResult = await result.text
+    const generatedCode = parseCodefence(rawResult)
     const end = performance.now()
 
     // Report successful trace
