@@ -38,14 +38,12 @@ Make sure to:
 - Follow tscircuit syntax exactly as shown in the documentation above
       `,
       prompt: prompt,
-      maxTokens: 2000,
-      temperature: 0.1,
     })
 
     const timeoutPromise = new Promise((_, reject) => {
       setTimeout(
         () => reject(new Error("AI model call timed out after 25 seconds")),
-        25000,
+        180_000,
       )
     })
 
