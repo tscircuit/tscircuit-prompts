@@ -1,0 +1,21 @@
+{
+  "name": "tscircuit-prompt",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "evalite watch"
+  },
+  "devDependencies": {
+    "@ai-sdk/openai": "^2.0.23",
+    "@biomejs/biome": "^2.2.2",
+    "@types/bun": "latest",
+    "ai": "^5.0.28",
+    "autoevals": "^0.0.131",
+    "evalite": "^0.11.5",
+    "vitest": "^3.2.4",
+    "zod": "^4.1.5"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
