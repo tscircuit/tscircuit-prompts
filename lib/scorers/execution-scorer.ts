@@ -3,6 +3,61 @@ import { reportTrace } from "evalite/traces"
 import { getCircuitJsonErrorsAndWarnings } from "./getCircuitJsonErrorsAndWarnings"
 import type { RunPromptToGenerateTscircuitResult } from "../run-prompt-to-generate-tscircuit"
 
+// Flag to switch between old and new compilation methods
+const USE_LOCAL_EVAL = process.env.USE_LOCAL_EVAL === "true"
+
+async function compileWithRemoteApi(code: string) {
+  const response = await fetch("https://compile.tscircuit.com/compile", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      fs_map: {
+        "main.circuit.tsx": code,
+      },
+    }),
+  })
+
+  if (!response.ok) {
+    const responseBody = await response.json().catch((e) => ({
+      error_code: "unknown",
+      error_message: "Unknown error",
+    }))
+    return {
+      circuitJson: [],
+      error: (responseBody as any).error,
+    }
+  }
+
+  const result = await response.json()
+  return result
+}
+
+async function compileWithLocalEval(code: string) {
+  // Import CircuitRunner dynamically to avoid startup issues
+  const { CircuitRunner } = await import("@tscircuit/eval")
+  const runner = new CircuitRunner()
+
+  // Execute the tscircuit code
+  let error: any
+  await runner
+    .executeWithFsMap({
+      fsMap: {
+        "main.circuit.tsx": code,
+      },
+    })
+    .catch((err) => {
+      error = err
+      console.error(err)
+    })
+
+  return {
+    circuitJson: await runner.getCircuitJson(),
+    error,
+  }
+}
+
 export const ExecutionScorer = createScorer<
   string,
   RunPromptToGenerateTscircuitResult
@@ -14,26 +69,24 @@ export const ExecutionScorer = createScorer<
     const start = performance.now()
 
     try {
-      // Import CircuitRunner dynamically to avoid startup issues
-      const { CircuitRunner } = await import("@tscircuit/eval")
-      const runner = new CircuitRunner()
+      let result: any
 
-      // Execute the tscircuit code
-      let error: any
-      await runner
-        .executeWithFsMap({
-          fsMap: {
-            "main.circuit.tsx": output.code,
-          },
-        })
-        .catch((err) => {
-          error = err
-          console.error(err)
-        })
-
-      const result = {
-        circuitJson: await runner.getCircuitJson(),
-        error,
+      if (USE_LOCAL_EVAL) {
+        result = await compileWithLocalEval(output.code)
+      } else {
+        try {
+          const compileResult = (await compileWithRemoteApi(output.code)) as any
+          result = {
+            circuitJson:
+              compileResult.circuit_json || compileResult.circuitJson,
+            error: compileResult.error || null,
+          }
+        } catch (apiError) {
+          result = {
+            circuitJson: null,
+            error: apiError,
+          }
+        }
       }
 
       const end = performance.now()
@@ -71,7 +124,7 @@ export const ExecutionScorer = createScorer<
       const circuitJson = JSON.parse(JSON.stringify(result.circuitJson))
 
       // Analyze circuit JSON for warnings and errors
-      const { errors, warnings, issuesAsString, hasErrorsOrWarnings } =
+      const { errors, warnings, issuesAsString } =
         getCircuitJsonErrorsAndWarnings(circuitJson)
 
       reportTrace({

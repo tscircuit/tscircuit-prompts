@@ -124,6 +124,20 @@ are optional.
 - You can generally alter footprints by changing numbers or adding parameters e.g. "soic8_w4mm" creates a 4mm width soic, "pinrow8_p1mm" creates an 8 pin pinrow with 1mm pitch
 - For batteries, just use "pinrow2"
 
+## Selector Syntax
+
+When specifying a selector, use "{component_name}.{pin_name}" or "net.{net_name}"
+
+These are common selectors:
+- "U1.VCC","R1.pin1","C1.pin2","C1.pos","U2.GND"
+- "net.VCC","net.GND","net.GPIO1", "net.BAT_PLUS", "net.BAT_MINUS"
+
+Selectors are used in the \`connections\` prop and the \`from\` and \`to\` props of the \`<trace />\` element.
+
+- \`<trace from="U1.VCC" to="R1.pin1" />\`
+- \`<chip name="U1" connections={{ VCC: "net.VCC", GND: "net.GND" }} />\`
+
+
 ## Important Notes
 
 - Make sure you've connected both sides of every passives (resistor, capacitor, inductor)

@@ -15,9 +15,7 @@ function parseCodefence(text: string): string {
   const codeblockRegex =
     /```(?:typescript|ts|tsx|javascript|js|jsx)?\n([\s\S]*?)```/g
   const match = codeblockRegex.exec(text)
-  if (match && match[1]) {
-    return match[1].trim()
-  }
+  if (match?.[1]) return match[1].trim()
   return text.trim()
 }
 
