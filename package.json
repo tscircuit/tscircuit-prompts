@@ -8,11 +8,9 @@
     "test": "evalite"
   },
   "devDependencies": {
-    "@ai-sdk/openai": "^2.0.23",
     "@biomejs/biome": "^2.2.2",
     "@tscircuit/create-snippet-url": "^0.0.8",
     "@types/bun": "latest",
-    "ai": "^5.0.28",
     "autoevals": "^0.0.131",
     "circuit-json": "^0.0.236",
     "dotenv": "^17.2.1",
@@ -28,6 +26,7 @@
     "@tscircuit/eval": "^0.0.293",
     "calculate-elbow": "^0.0.11",
     "comlink": "^4.4.2",
+    "openai": "^5.16.0",
     "tscircuit": "^0.0.605"
   }
 }

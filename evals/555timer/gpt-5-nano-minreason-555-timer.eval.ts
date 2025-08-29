@@ -7,12 +7,12 @@ import {
 import { inputs } from "./inputs-555timer"
 
 evalite<string, RunPromptToGenerateTscircuitResult>(
-  "gpt-5-mini(minreason) 555 timer",
+  "gpt-5-nano(minreason) 555 timer",
   {
     data: async () => inputs,
     task: async (input) => {
       return await runPromptToGenerateTscircuit(input, {
-        model: "gpt-5-mini",
+        model: "gpt-5-nano",
         reasoning_effort: "minimal",
       })
     },
