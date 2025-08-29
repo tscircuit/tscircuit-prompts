@@ -1,22 +1,40 @@
-import { CircuitRunner } from "@tscircuit/eval"
 import { createScorer } from "evalite"
+import { reportTrace } from "evalite/traces"
 
 export const ExecutionScorer = createScorer<string, string>({
   name: "TSCircuit Execution Scorer",
-  description: "Executes TSCircuit code and checks for runtime errors and warnings",
+  description: "Executes TSCircuit code and captures traces with error information",
   scorer: async ({ input, output }) => {
+    const start = performance.now()
+    
     try {
+      // Import CircuitRunner dynamically to avoid startup issues
+      const { CircuitRunner } = await import("@tscircuit/eval")
       const runner = new CircuitRunner()
       
       // Execute the TSCircuit code
-      const result = await runner.executeWithFsMap({
+      const result: any = await runner.executeWithFsMap({
         fsMap: {
           "index.tsx": output
         }
       })
 
+      const end = performance.now()
+
+      // Report trace with execution details
+      reportTrace({
+        start,
+        end,
+        input: [{ role: "user", content: input }],
+        output: result?.error ? `Error: ${result.error.message}` : "Circuit executed successfully",
+        usage: {
+          promptTokens: 0,
+          completionTokens: 0,
+        }
+      })
+
       // Check for execution errors
-      if (result.error) {
+      if (result?.error) {
         return {
           score: 0,
           metadata: {
@@ -25,13 +43,14 @@ export const ExecutionScorer = createScorer<string, string>({
             error_type: "execution_error",
             circuit_json: null,
             warnings: [],
-            errors: []
+            errors: [{ type: "execution", message: result.error.message }],
+            execution_time: end - start
           }
         }
       }
 
       // Get the circuit JSON
-      const circuitJson = result.circuitJson || result.circuit
+      const circuitJson = result?.circuitJson || result?.circuit
 
       if (!circuitJson) {
         return {
@@ -42,7 +61,8 @@ export const ExecutionScorer = createScorer<string, string>({
             error_type: "no_output",
             circuit_json: null,
             warnings: [],
-            errors: []
+            errors: [{ type: "no_output", message: "No circuit JSON generated" }],
+            execution_time: end - start
           }
         }
       }
@@ -75,7 +95,7 @@ export const ExecutionScorer = createScorer<string, string>({
           }
 
           // Recursively check nested objects
-          Object.values(element).forEach((value, key) => {
+          Object.entries(element).forEach(([key, value]) => {
             if (typeof value === "object" && value !== null) {
               analyzeElement(value, `${path}.${key}`)
             }
@@ -106,11 +126,26 @@ export const ExecutionScorer = createScorer<string, string>({
           errors,
           warning_count: warnings.length,
           error_count: errors.length,
-          total_elements: Array.isArray(circuitJson) ? circuitJson.length : 1
+          total_elements: Array.isArray(circuitJson) ? circuitJson.length : 1,
+          execution_time: end - start
         }
       }
 
     } catch (error) {
+      const end = performance.now()
+      
+      // Report trace for failed execution
+      reportTrace({
+        start,
+        end,
+        input: [{ role: "user", content: input }],
+        output: `Runtime Error: ${error instanceof Error ? error.message : String(error)}`,
+        usage: {
+          promptTokens: 0,
+          completionTokens: 0,
+        }
+      })
+
       return {
         score: 0,
         metadata: {
@@ -119,7 +154,8 @@ export const ExecutionScorer = createScorer<string, string>({
           error_type: "runtime_error",
           circuit_json: null,
           warnings: [],
-          errors: []
+          errors: [{ type: "runtime", message: error instanceof Error ? error.message : String(error) }],
+          execution_time: end - start
         }
       }
     }

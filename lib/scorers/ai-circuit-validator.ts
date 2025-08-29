@@ -22,7 +22,7 @@ export const AICircuitValidator = createScorer<string, string>({
   description: "Validates TSCircuit code using AI with comprehensive boolean flags",
   scorer: async ({ input, output }) => {
     const { object } = await generateObject({
-      model: openai("gpt-4o-2024-11-20"),
+      model: openai("gpt-4o-mini"),
       prompt: `
         You are an expert TSCircuit validator. Analyze the following TSCircuit code and determine if it's valid.
 

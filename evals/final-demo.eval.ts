@@ -1,5 +1,5 @@
 import { evalite } from "evalite"
-import { MockExecutionScorer } from "../lib/scorers/mock-execution-scorer"
+import { ExecutionScorer } from "../lib/scorers/execution-scorer"
 // Uncomment the line below if you have an OpenAI API key configured
 // import { AICircuitValidator } from "../lib/scorers/ai-circuit-validator"
 
@@ -13,7 +13,7 @@ evalite("TSCircuit Final Demo", {
     },
     {
       input: "Create a microcontroller circuit with power supply",
-    }
+    },
   ],
   task: async (input) => {
     // Simulate different quality LLM outputs
@@ -75,11 +75,11 @@ evalite("TSCircuit Final Demo", {
   </board>
 )`
     }
-    
+
     return "// Error: Could not generate circuit"
   },
   scorers: [
-    MockExecutionScorer,
+    ExecutionScorer,
     // AICircuitValidator, // Uncomment if you have OpenAI API key
   ],
 })

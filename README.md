@@ -54,17 +54,19 @@ Validates TSCircuit code using GPT-4 with the following boolean flags:
 ### Execution Scorer  
 
 Executes the TSCircuit code using `@tscircuit/eval` and:
-- Checks for runtime errors
-- Analyzes circuit JSON for warnings/errors
+- Captures detailed execution traces with timing information
+- Reports trace data for both successful and failed executions
+- Checks for runtime errors and analyzes circuit JSON for warnings/errors
 - Looks for elements with `warning_type` or `error_type` fields
 - Calculates score based on execution success and issue count
+- Uses dynamic imports to avoid startup dependency issues
 
 ## Usage
 
 The scorers can be imported and used in your own evaluations:
 
 ```typescript
-import { AICircuitValidator, MockExecutionScorer } from "../lib/scorers"
+import { AICircuitValidator, ExecutionScorer } from "../lib/scorers"
 
 evalite("My TSCircuit Eval", {
   data: async () => [
@@ -76,15 +78,14 @@ evalite("My TSCircuit Eval", {
     // Your LLM call here
     return generateTSCircuitCode(input)
   },
-  scorers: [AICircuitValidator, MockExecutionScorer]
+  scorers: [AICircuitValidator, ExecutionScorer]
 })
 ```
 
 ## File Structure
 
-- `lib/scorers/ai-circuit-validator.ts` - AI-based validation scorer
-- `lib/scorers/execution-scorer.ts` - Runtime execution scorer (has dependency issues)
-- `lib/scorers/mock-execution-scorer.ts` - Mock execution scorer (working)
+- `lib/scorers/ai-circuit-validator.ts` - AI-based validation scorer (uses gpt-4o-mini)
+- `lib/scorers/execution-scorer.ts` - Runtime execution scorer with trace capture
 - `evals/` - All evaluation test files
   - `comprehensive-test.eval.ts` - Main working test suite
   - `final-demo.eval.ts` - Demo with realistic examples
