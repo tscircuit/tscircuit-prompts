@@ -1,8 +1,12 @@
 import { createScorer } from "evalite"
 import { reportTrace } from "evalite/traces"
 import { getCircuitJsonErrorsAndWarnings } from "./getCircuitJsonErrorsAndWarnings"
+import type { RunPromptToGenerateTscircuitResult } from "../run-prompt-to-generate-tscircuit"
 
-export const ExecutionScorer = createScorer<string, string>({
+export const ExecutionScorer = createScorer<
+  string,
+  RunPromptToGenerateTscircuitResult
+>({
   name: "tscircuit Execution Scorer",
   description:
     "Executes tscircuit code and captures traces with error information",
@@ -19,7 +23,7 @@ export const ExecutionScorer = createScorer<string, string>({
       await runner
         .executeWithFsMap({
           fsMap: {
-            "index.tsx": output,
+            "index.tsx": output.code,
           },
         })
         .catch((err) => {
@@ -28,7 +32,7 @@ export const ExecutionScorer = createScorer<string, string>({
         })
 
       const result = {
-        circuitJson: runner.getCircuitJson(),
+        circuitJson: await runner.getCircuitJson(),
         error,
       }
 
@@ -56,7 +60,6 @@ export const ExecutionScorer = createScorer<string, string>({
             execution_successful: false,
             error: result.error.message || result.error.toString(),
             error_type: "execution_error",
-            circuit_json: null,
             warnings: [],
             errors: [{ type: "execution", message: result.error.message }],
             execution_time: end - start,
@@ -99,7 +102,6 @@ export const ExecutionScorer = createScorer<string, string>({
           execution_successful: true,
           error: null,
           error_type: null,
-          circuit_json: circuitJson,
           warnings,
           errors,
           warning_count: warnings.length,
@@ -129,7 +131,6 @@ export const ExecutionScorer = createScorer<string, string>({
           execution_successful: false,
           error: error instanceof Error ? error.message : String(error),
           error_type: "runtime_error",
-          circuit_json: null,
           warnings: [],
           errors: [
             {

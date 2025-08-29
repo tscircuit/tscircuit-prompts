@@ -4,7 +4,13 @@ import { tscircuitSyntaxPrompt } from "./prompts/tscircuit-syntax"
 import { reportTrace } from "evalite/traces"
 
 // Set evalite global testTimeout
-;(global as any).testTimeout = 180_000
+import { createSnippetUrl } from "@tscircuit/create-snippet-url"
+
+export interface RunPromptToGenerateTscircuitResult {
+  code: string
+  rawResponse: string
+  snippetUrl: string
+}
 
 function parseCodefence(text: string): string {
   const codeblockRegex =
@@ -23,7 +29,7 @@ interface RunPromptOptions {
 export async function runPromptToGenerateTscircuit(
   prompt: string,
   opts: RunPromptOptions = {},
-): Promise<string> {
+): Promise<RunPromptToGenerateTscircuitResult> {
   const { model = "gpt-5-nano" } = opts
   const start = performance.now()
 
@@ -64,14 +70,18 @@ Make sure to:
       start,
       end,
       input: [{ role: "user", content: prompt }],
-      output: generatedCode,
+      output: rawResult,
       usage: {
         promptTokens: 0, // streamText doesn't provide usage info directly
         completionTokens: 0,
       },
     })
 
-    return generatedCode
+    return {
+      code: generatedCode,
+      rawResponse: rawResult,
+      snippetUrl: createSnippetUrl(generatedCode),
+    }
   } catch (error) {
     const end = performance.now()
 

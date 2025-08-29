@@ -1,8 +1,12 @@
 import { evalite } from "evalite"
 import { ExecutionScorer } from "../lib/scorers/execution-scorer"
-import { runPromptToGenerateTscircuit } from "../lib/run-prompt-to-generate-tscircuit"
+import {
+  runPromptToGenerateTscircuit,
+  type RunPromptToGenerateTscircuitResult,
+} from "../lib/run-prompt-to-generate-tscircuit"
+import { createSnippetUrl } from "@tscircuit/create-snippet-url"
 
-evalite("555 timer", {
+evalite<string, RunPromptToGenerateTscircuitResult>("555 timer", {
   data: async () => [
     {
       input: "Create a simple 555 timer circuit that creates a square wave",
@@ -11,5 +15,12 @@ evalite("555 timer", {
   task: async (input) => {
     return await runPromptToGenerateTscircuit(input)
   },
+  columns: async (results) => [
+    {
+      label: "Snippet",
+      value: (result: RunPromptToGenerateTscircuitResult) =>
+        `[Snippet](${result.snippetUrl})`,
+    },
+  ],
   scorers: [ExecutionScorer],
 })

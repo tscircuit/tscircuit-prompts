@@ -110,11 +110,23 @@ are optional.
 - \`<cutout />\` - \`shape\` (rect), \`width\`, \`height\`
 - \`<crystal />\` - \`frequency\`, \`loadCapacitance\`, \`loadResistance\`
 - \`<battery />\`
-
+- \`<potentiometer />\` - \`maxResistance\`, \`pinVariant\` (two_pin/three_pin). Common footprint "pinrow2"/"pinrow3"
 
 ### Footprint Only Elements
 
 - \`<smtpad />\` - \`portHints\`, \`pcbX\`, \`pcbY\`, \`shape\`, \`width\`, \`height\`
 - \`<platedhole />\` - \`pcbX\`, \`pcbY\`, \`shape\`, \`width\`, \`height\`
+
+## Common Footprints
+
+- "0402", "0603", "0805", "1206", "1210"
+- "dip", "dip8", "dip16", "axial", "soic8", "bga64", "tssop8", "stampboard", "stampreceiver", "hc49", "to92", "to220", "ssop", "qfp16", "qfn16", "sot23", "sot23_5", "sot223", "pinrow2", "pinrow6"
+- You can generally alter footprints by changing numbers or adding parameters e.g. "soic8_w4mm" creates a 4mm width soic, "pinrow8_p1mm" creates an 8 pin pinrow with 1mm pitch
+
+## Important Notes
+
+- Make sure you've connected both sides of every passives (resistor, capacitor, inductor)
+  with a <trace /> or a connections={{ pin1: ..., pin2: ... }} prop
+- Every normal element has a footprint prop
 
 `.trim()
