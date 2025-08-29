@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "start": "evalite watch",
-    "dev": "evalite watch"
+    "dev": "evalite watch",
+    "test": "evalite"
   },
   "devDependencies": {
     "@ai-sdk/openai": "^2.0.23",

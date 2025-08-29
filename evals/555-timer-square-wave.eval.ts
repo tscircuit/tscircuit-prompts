@@ -15,11 +15,10 @@ evalite<string, RunPromptToGenerateTscircuitResult>("555 timer", {
   task: async (input) => {
     return await runPromptToGenerateTscircuit(input)
   },
-  columns: async (results) => [
+  columns: async ({ output }) => [
     {
       label: "Snippet",
-      value: (result: RunPromptToGenerateTscircuitResult) =>
-        `[Snippet](${result.snippetUrl})`,
+      value: `[Snippet](${output.snippetUrl})`,
     },
   ],
   scorers: [ExecutionScorer],
