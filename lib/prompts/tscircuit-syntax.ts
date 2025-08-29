@@ -122,6 +122,7 @@ are optional.
 - "0402", "0603", "0805", "1206", "1210"
 - "dip", "dip8", "dip16", "axial", "soic8", "bga64", "tssop8", "stampboard", "stampreceiver", "hc49", "to92", "to220", "ssop", "qfp16", "qfn16", "sot23", "sot23_5", "sot223", "pinrow2", "pinrow6"
 - You can generally alter footprints by changing numbers or adding parameters e.g. "soic8_w4mm" creates a 4mm width soic, "pinrow8_p1mm" creates an 8 pin pinrow with 1mm pitch
+- For batteries, just use "pinrow2"
 
 ## Important Notes
 

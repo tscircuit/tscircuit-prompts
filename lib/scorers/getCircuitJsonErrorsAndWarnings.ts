@@ -10,7 +10,6 @@ export interface CircuitJsonAnalysis {
 export function getCircuitJsonErrorsAndWarnings(
   circuitJson: any,
 ): CircuitJsonAnalysis {
-  console.log({ circuitJson })
   const warnings: AnyCircuitElement[] = []
   const errors: AnyCircuitElement[] = []
 
