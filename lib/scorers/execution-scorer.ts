@@ -18,12 +18,6 @@ export const ExecutionScorer = createScorer<
       const { CircuitRunner } = await import("@tscircuit/eval")
       const runner = new CircuitRunner()
 
-      console.log({
-        fsMap: {
-          "main.circuit.tsx": output.code,
-        },
-      })
-
       // Execute the tscircuit code
       let error: any
       await runner

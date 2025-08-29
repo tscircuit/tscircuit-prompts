@@ -23,7 +23,7 @@ function parseCodefence(text: string): string {
 }
 
 interface RunPromptOptions {
-  model?: string
+  model?: Parameters<typeof openai>[0]
 }
 
 export async function runPromptToGenerateTscircuit(
