@@ -1,5 +1,6 @@
 import { createScorer } from "evalite"
 import { reportTrace } from "evalite/traces"
+import { getCircuitJsonErrorsAndWarnings } from "./getCircuitJsonErrorsAndWarnings"
 
 export const ExecutionScorer = createScorer<string, string>({
   name: "tscircuit Execution Scorer",
@@ -67,39 +68,12 @@ export const ExecutionScorer = createScorer<string, string>({
       const circuitJson = result.circuitJson
 
       // Analyze circuit JSON for warnings and errors
-      const warnings: any[] = []
-      const errors: any[] = []
+      const { errors, warnings, issuesAsString, hasErrorsOrWarnings } =
+        getCircuitJsonErrorsAndWarnings(circuitJson)
 
-      const analyzeElement = (element: any, path = "root") => {
-        if (Array.isArray(element)) {
-          element.forEach((item, index) =>
-            analyzeElement(item, `${path}[${index}]`),
-          )
-        } else if (element && typeof element === "object") {
-          // Check for warning_type or error_type fields
-          if (element.warning_type) {
-            warnings.push({
-              path,
-              type: element.warning_type,
-              message:
-                element.warning_message || element.message || "Unknown warning",
-              element_type: element.type || "unknown",
-            })
-          }
-
-          if (element.error_type) {
-            errors.push({
-              path,
-              type: element.error_type,
-              message:
-                element.error_message || element.message || "Unknown error",
-              element_type: element.type || "unknown",
-            })
-          }
-        }
-      }
-
-      analyzeElement(circuitJson)
+      reportTrace({
+        // TODO
+      })
 
       // Calculate score based on execution success and issues found
       let score = 1.0 // Start with perfect score
@@ -134,9 +108,7 @@ export const ExecutionScorer = createScorer<string, string>({
         start,
         end,
         input: [{ role: "user", content: input }],
-        output: [...errors, ...warnings]
-          .map((e) => `${e.type}: ${e.message}`)
-          .join("\n"),
+        output: `Runtime error: ${error instanceof Error ? error.message : String(error)}`,
         usage: {
           promptTokens: 0,
           completionTokens: 0,
