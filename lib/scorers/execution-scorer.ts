@@ -64,8 +64,8 @@ export const ExecutionScorer = createScorer<string, string>({
         }
       }
 
-      // Get the circuit JSON
-      const circuitJson = result.circuitJson
+      // Get the circuit JSON and ensure it's serializable
+      const circuitJson = JSON.parse(JSON.stringify(result.circuitJson))
 
       // Analyze circuit JSON for warnings and errors
       const { errors, warnings, issuesAsString, hasErrorsOrWarnings } =
@@ -75,7 +75,8 @@ export const ExecutionScorer = createScorer<string, string>({
         start,
         end,
         input: [{ role: "user", content: input }],
-        output: issuesAsString || "Circuit executed successfully with no issues",
+        output:
+          issuesAsString || "Circuit executed successfully with no issues",
         usage: {
           promptTokens: 0,
           completionTokens: 0,
