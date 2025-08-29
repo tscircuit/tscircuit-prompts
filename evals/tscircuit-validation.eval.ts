@@ -2,7 +2,7 @@ import { evalite } from "evalite"
 import { AICircuitValidator } from "../lib/scorers/ai-circuit-validator"
 import { ExecutionScorer } from "../lib/scorers/execution-scorer"
 
-evalite("TSCircuit Validation", {
+evalite("tscircuit Validation", {
   data: async () => [
     {
       input: "Create a simple LED circuit with a resistor",
@@ -97,15 +97,12 @@ evalite("TSCircuit Validation", {
     <resistor name="R1" resistance="10k" footprint="0402" connections={{pin1: "net.VCC", pin2: ".U1 .NRST"}} />
   </board>
 )`,
-    }
+    },
   ],
   task: async (input) => {
     // In a real scenario, this would be the output from an LLM
     // For this demo, we're using the expected output directly to simulate LLM output
     return input.expected
   },
-  scorers: [
-    AICircuitValidator,
-    ExecutionScorer
-  ],
+  scorers: [AICircuitValidator, ExecutionScorer],
 })

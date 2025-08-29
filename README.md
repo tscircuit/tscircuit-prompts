@@ -1,27 +1,30 @@
-# TSCircuit Prompt Evaluation
+# tscircuit Prompt Evaluation
 
-This project provides comprehensive evaluation tools for TSCircuit code generation using Evalite.
+This project provides comprehensive evaluation tools for tscircuit code generation using Evalite.
 
 ## Features
 
-- **AI Circuit Validator**: Uses LLM to validate TSCircuit code with detailed boolean flags
-- **Execution Scorer**: Actually runs the TSCircuit code and checks for errors/warnings
+- **AI Circuit Validator**: Uses LLM to validate tscircuit code with detailed boolean flags
+- **Execution Scorer**: Actually runs the tscircuit code and checks for errors/warnings
 - **Comprehensive Testing**: Evaluates syntax, semantics, and runtime behavior
 
 ## Setup
 
 1. Install dependencies:
+
 ```bash
 bun install
 ```
 
 2. Create a `.env` file with your OpenAI API key:
+
 ```bash
 cp .env.example .env
 # Edit .env and add your OPENAI_API_KEY
 ```
 
 3. Run the evaluations:
+
 ```bash
 # Run all working evals
 bun run evalite evals/comprehensive-test.eval.ts evals/final-demo.eval.ts
@@ -33,14 +36,15 @@ bun run evalite evals/comprehensive-test.eval.ts
 bun run dev
 ```
 
-This will start the Evalite server and run the TSCircuit validation suite.
+This will start the Evalite server and run the tscircuit validation suite.
 
 ## Scorers
 
 ### AI Circuit Validator
 
-Validates TSCircuit code using GPT-4 with the following boolean flags:
-- `has_invalid_element`: Invalid/unsupported TSCircuit elements
+Validates tscircuit code using GPT-4 with the following boolean flags:
+
+- `has_invalid_element`: Invalid/unsupported tscircuit elements
 - `uses_xy_coordinates`: Raw x/y coordinates instead of proper layout
 - `missing_connection`: Missing connections between components
 - `has_syntax_errors`: TypeScript/TSX syntax errors
@@ -48,12 +52,13 @@ Validates TSCircuit code using GPT-4 with the following boolean flags:
 - `missing_required_props`: Missing essential props
 - `invalid_footprint`: Invalid footprint names
 - `improper_trace_connections`: Invalid trace selectors
-- `uses_deprecated_syntax`: Deprecated TSCircuit patterns
+- `uses_deprecated_syntax`: Deprecated tscircuit patterns
 - `has_logical_errors`: Logical circuit issues
 
-### Execution Scorer  
+### Execution Scorer
 
-Executes the TSCircuit code using `@tscircuit/eval` and:
+Executes the tscircuit code using `@tscircuit/eval` and:
+
 - Captures detailed execution traces with timing information
 - Reports trace data for both successful and failed executions
 - Checks for runtime errors and analyzes circuit JSON for warnings/errors
@@ -68,26 +73,26 @@ The scorers can be imported and used in your own evaluations:
 ```typescript
 import { AICircuitValidator, ExecutionScorer } from "../lib/scorers"
 
-evalite("My TSCircuit Eval", {
+evalite("My tscircuit Eval", {
   data: async () => [
     {
-      input: "Create a simple LED circuit"
-    }
+      input: "Create a simple LED circuit",
+    },
   ],
   task: async (input) => {
     // Your LLM call here
-    return generateTSCircuitCode(input)
+    return generatetscircuitCode(input)
   },
-  scorers: [AICircuitValidator, ExecutionScorer]
+  scorers: [AICircuitValidator, ExecutionScorer],
 })
 ```
 
 ## File Structure
 
-- `lib/scorers/ai-circuit-validator.ts` - AI-based validation scorer (uses gpt-4o-mini)
+- `lib/scorers/ai-circuit-validator.ts` - AI-based validation scorer (uses gpt-5-nano)
 - `lib/scorers/execution-scorer.ts` - Runtime execution scorer with trace capture
 - `evals/` - All evaluation test files
   - `comprehensive-test.eval.ts` - Main working test suite
   - `final-demo.eval.ts` - Demo with realistic examples
   - `ai-test.eval.ts` - AI validator only (requires OpenAI API key)
-- `lib/prompts/tscircuit-syntax.ts` - TSCircuit syntax reference
+- `lib/prompts/tscircuit-syntax.ts` - tscircuit syntax reference

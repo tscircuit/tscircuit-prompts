@@ -3,7 +3,7 @@ import { ExecutionScorer } from "../lib/scorers/execution-scorer"
 // Uncomment the line below if you have an OpenAI API key configured
 // import { AICircuitValidator } from "../lib/scorers/ai-circuit-validator"
 
-evalite("TSCircuit Final Demo", {
+evalite("tscircuit Final Demo", {
   data: async () => [
     {
       input: "Create a simple LED blinker circuit with a 555 timer",

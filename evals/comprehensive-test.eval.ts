@@ -1,7 +1,7 @@
 import { evalite } from "evalite"
 import { ExecutionScorer } from "../lib/scorers/execution-scorer"
 
-evalite("TSCircuit Comprehensive Test", {
+evalite("tscircuit Comprehensive Test", {
   data: async () => [
     {
       input: "Create a simple LED circuit",
@@ -14,7 +14,7 @@ evalite("TSCircuit Comprehensive Test", {
     },
     {
       input: "Create proper microcontroller circuit",
-    }
+    },
   ],
   task: async (input) => {
     // Simulate LLM outputs based on input
@@ -66,7 +66,7 @@ evalite("TSCircuit Comprehensive Test", {
   </board>
 )`
     }
-    
+
     return "// Default circuit"
   },
   scorers: [ExecutionScorer],

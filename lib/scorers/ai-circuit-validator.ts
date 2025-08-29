@@ -4,29 +4,66 @@ import { createScorer } from "evalite"
 import { z } from "zod"
 
 const circuitValidationSchema = z.object({
-  has_invalid_element: z.boolean().describe("True if the circuit contains invalid or unsupported TSCircuit elements"),
-  uses_xy_coordinates: z.boolean().describe("True if the circuit uses raw x/y coordinates instead of proper TSCircuit layout"),
-  missing_connection: z.boolean().describe("True if there are components that should be connected but aren't"),
-  has_syntax_errors: z.boolean().describe("True if there are TSX/TypeScript syntax errors in the code"),
-  improper_component_usage: z.boolean().describe("True if components are used incorrectly (wrong props, missing required props)"),
-  missing_required_props: z.boolean().describe("True if components are missing essential props like name, footprint, etc."),
-  invalid_footprint: z.boolean().describe("True if footprint names are invalid or non-existent"),
-  improper_trace_connections: z.boolean().describe("True if trace connections use invalid selectors or references"),
-  uses_deprecated_syntax: z.boolean().describe("True if the code uses deprecated TSCircuit syntax or patterns"),
-  has_logical_errors: z.boolean().describe("True if the circuit has logical issues (shorts, missing power, etc.)"),
-  rationale: z.string().describe("Detailed explanation of the validation findings and any issues identified"),
+  has_invalid_element: z
+    .boolean()
+    .describe(
+      "True if the circuit contains invalid or unsupported tscircuit elements",
+    ),
+  uses_xy_coordinates: z
+    .boolean()
+    .describe(
+      "True if the circuit uses raw x/y coordinates instead of proper tscircuit layout",
+    ),
+  missing_connection: z
+    .boolean()
+    .describe(
+      "True if there are components that should be connected but aren't",
+    ),
+  has_syntax_errors: z
+    .boolean()
+    .describe("True if there are TSX/TypeScript syntax errors in the code"),
+  improper_component_usage: z
+    .boolean()
+    .describe(
+      "True if components are used incorrectly (wrong props, missing required props)",
+    ),
+  missing_required_props: z
+    .boolean()
+    .describe(
+      "True if components are missing essential props like name, footprint, etc.",
+    ),
+  invalid_footprint: z
+    .boolean()
+    .describe("True if footprint names are invalid or non-existent"),
+  improper_trace_connections: z
+    .boolean()
+    .describe("True if trace connections use invalid selectors or references"),
+  uses_deprecated_syntax: z
+    .boolean()
+    .describe("True if the code uses deprecated tscircuit syntax or patterns"),
+  has_logical_errors: z
+    .boolean()
+    .describe(
+      "True if the circuit has logical issues (shorts, missing power, etc.)",
+    ),
+  rationale: z
+    .string()
+    .describe(
+      "Detailed explanation of the validation findings and any issues identified",
+    ),
 })
 
 export const AICircuitValidator = createScorer<string, string>({
   name: "AI Circuit Validator",
-  description: "Validates TSCircuit code using AI with comprehensive boolean flags",
+  description:
+    "Validates tscircuit code using AI with comprehensive boolean flags",
   scorer: async ({ input, output }) => {
     const { object } = await generateObject({
-      model: openai("gpt-4o-mini"),
+      model: openai("gpt-5-nano"),
       prompt: `
-        You are an expert TSCircuit validator. Analyze the following TSCircuit code and determine if it's valid.
+        You are an expert tscircuit validator. Analyze the following tscircuit code and determine if it's valid.
 
-        TSCircuit code to validate:
+        tscircuit code to validate:
         \`\`\`tsx
         ${output}
         \`\`\`
@@ -37,8 +74,8 @@ export const AICircuitValidator = createScorer<string, string>({
         \`\`\`
 
         Check for the following issues:
-        1. Invalid elements - components that don't exist in TSCircuit
-        2. Raw x/y coordinates - TSCircuit prefers layout helpers over manual positioning
+        1. Invalid elements - components that don't exist in tscircuit
+        2. Raw x/y coordinates - tscircuit prefers layout helpers over manual positioning
         3. Missing connections - components that should be connected but aren't
         4. Syntax errors - TypeScript/TSX compilation issues
         5. Improper component usage - wrong props or usage patterns
@@ -87,7 +124,7 @@ export const AICircuitValidator = createScorer<string, string>({
           has_logical_errors: object.has_logical_errors,
         },
         rationale: object.rationale,
-        issues_found: flags.filter(f => !f).length,
+        issues_found: flags.filter((f) => !f).length,
         total_checks: flags.length,
       },
     }

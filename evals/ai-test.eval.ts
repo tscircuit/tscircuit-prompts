@@ -1,7 +1,7 @@
 import { evalite } from "evalite"
 import { AICircuitValidator } from "../lib/scorers/ai-circuit-validator"
 
-evalite("TSCircuit AI Validation Test", {
+evalite("tscircuit AI Validation Test", {
   data: async () => [
     {
       input: "Create a simple LED circuit",
@@ -22,7 +22,7 @@ evalite("TSCircuit AI Validation Test", {
     <resistor resistance="invalid" />
   </board>
 )`,
-    }
+    },
   ],
   task: async (input) => {
     return input.expected

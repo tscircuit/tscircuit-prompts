@@ -1,7 +1,7 @@
 import { evalite } from "evalite"
 import { ExecutionScorer } from "../lib/scorers/execution-scorer"
 
-evalite("TSCircuit Execution Test", {
+evalite("tscircuit Execution Test", {
   data: async () => [
     {
       input: "Simple LED circuit",
@@ -21,7 +21,7 @@ evalite("TSCircuit Execution Test", {
     <invalidcomponent name="X1" />
   </board>
 )`,
-    }
+    },
   ],
   task: async (input) => {
     return input.expected

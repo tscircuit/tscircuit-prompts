@@ -14,7 +14,7 @@
     "dotenv": "^17.2.1",
     "evalite": "^0.11.5",
     "vitest": "^3.2.4",
-    "zod": "^4.1.5"
+    "zod": "3"
   },
   "peerDependencies": {
     "typescript": "^5"
