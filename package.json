@@ -23,10 +23,10 @@
   },
   "dependencies": {
     "@babel/standalone": "^7.28.3",
-    "@tscircuit/eval": "^0.0.293",
+    "@tscircuit/eval": "^0.0.296",
     "calculate-elbow": "^0.0.11",
     "comlink": "^4.4.2",
     "openai": "^5.16.0",
-    "tscircuit": "^0.0.605"
+    "tscircuit": "^0.0.611"
   }
 }
